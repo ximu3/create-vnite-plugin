@@ -112,6 +112,9 @@ async function collectPluginInfo(providedName) {
       process.exit(0)
     }
 
+    // 自动生成关键词而不是让用户输入
+    response.keywords = ['vnite-plugin', response.category, response.name]
+
     return response
   } catch (error) {
     console.error(colors.red('❌ 输入错误:'), error.message)
@@ -122,10 +125,20 @@ async function collectPluginInfo(providedName) {
 async function createPlugin(pluginInfo) {
   const { name: pluginName, description, author, category, keywords, license } = pluginInfo
   const targetDir = path.resolve(process.cwd(), pluginName)
+  const templateDir = path.join(__dirname, `template/${category}`)
 
   // 检查目录是否已存在
   if (await fs.pathExists(targetDir)) {
     console.error(colors.red(`❌ 错误: 目录 "${pluginName}" 已存在`))
+    process.exit(1)
+  }
+
+  // 检查模板目录是否存在
+  if (!(await fs.pathExists(templateDir))) {
+    console.error(colors.red(`❌ 错误: 模板目录 "${category}" 不存在`))
+    console.error(
+      colors.yellow(`请确认在 ${path.dirname(templateDir)} 中存在 ${category} 模板目录`)
+    )
     process.exit(1)
   }
 
@@ -137,11 +150,16 @@ async function createPlugin(pluginInfo) {
     await fs.ensureDir(targetDir)
 
     // 复制模板文件
-    const templateDir = path.join(__dirname, `template/${category}`)
     await fs.copy(templateDir, targetDir)
 
     // 更新 package.json
     const packageJsonPath = path.join(targetDir, 'package.json')
+
+    // 确认 package.json 存在
+    if (!(await fs.pathExists(packageJsonPath))) {
+      throw new Error(`模板目录中缺少 package.json 文件`)
+    }
+
     const packageJson = await fs.readJson(packageJsonPath)
 
     // 应用用户输入的信息
@@ -170,10 +188,6 @@ ${author}
 \`\`\`bash
 # 开发模式
 npm install
-npm run dev
-
-# 构建
-npm run build
 
 # 打包
 npm run pack
@@ -183,6 +197,7 @@ npm run pack
 
 ${license}
 `
+
     await fs.writeFile(readmePath, readmeContent)
 
     console.log(colors.green('\n✅ 插件创建成功!'))
@@ -199,10 +214,8 @@ ${license}
     console.log(colors.blue('\n📦 接下来的步骤:'))
     console.log(colors.yellow(`  cd ${pluginName}`))
     console.log(colors.yellow('  npm install'))
-    console.log(colors.yellow('  npm run dev'))
 
     console.log(colors.blue('\n🔗 有用的命令:'))
-    console.log(colors.yellow('  npm run build     # 构建插件'))
     console.log(colors.yellow('  npm run pack      # 打包为 .vnpkg 文件'))
 
     console.log(colors.green('\n🎉 开始开发你的 Vnite 插件吧!'))
@@ -219,8 +232,16 @@ ${license}
 async function main() {
   const args = process.argv.slice(2)
 
+  // 显示帮助信息
   if (args.includes('--help') || args.includes('-h')) {
     showHelp()
+    return
+  }
+
+  // 显示版本信息
+  if (args.includes('--version') || args.includes('-v')) {
+    const packageJson = require(path.join(__dirname, 'package.json'))
+    console.log(`create-vnite-plugin v${packageJson.version || '1.0.0'}`)
     return
   }
 
