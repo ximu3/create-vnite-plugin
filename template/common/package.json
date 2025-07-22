@@ -15,17 +15,20 @@
   "category": "common",
   "configuration": [],
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "dev": "npm run build:watch",
+    "build": "webpack",
+    "build:watch": "webpack --watch",
     "pack": "npm run build && npx vnite-plugin-sdk pack .",
     "clean": "rimraf dist",
     "prepack": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
-    "vnite-plugin-sdk": "^0.1.0",
     "rimraf": "^5.0.0",
-    "typescript": "^5.8.3"
+    "terser-webpack-plugin": "^5.3.14",
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.8.3",
+    "vnite-plugin-sdk": "^0.1.1",
+    "webpack": "^5.100.2",
+    "webpack-cli": "^6.0.1"
   }
 }
