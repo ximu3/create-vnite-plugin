@@ -137,7 +137,7 @@ async function createPlugin(pluginInfo) {
     await fs.ensureDir(targetDir)
 
     // 复制模板文件
-    const templateDir = path.join(__dirname, `template/${category.value}`)
+    const templateDir = path.join(__dirname, `template/${category}`)
     await fs.copy(templateDir, targetDir)
 
     // 更新 package.json
