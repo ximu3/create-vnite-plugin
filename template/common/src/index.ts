@@ -1,10 +1,4 @@
-import type {
-  IPluginAPI,
-  ScraperProvider,
-  GameList,
-  ScraperIdentifier,
-  GameMetadata
-} from 'vnite-plugin-sdk'
+import type { IPluginAPI } from 'vnite-plugin-sdk'
 
 /**
  * 通用示例插件

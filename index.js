@@ -45,6 +45,11 @@ function validatePluginName(name) {
   return validName.test(name)
 }
 
+// 将字符串转换为小写并将空格替换为连字符
+function formatString(str) {
+  return str.toLowerCase().replace(/\s+/g, '-')
+}
+
 async function collectPluginInfo(providedName) {
   console.log(colors.bold('\n🎯 让我们创建你的 Vnite 插件!'))
   console.log(colors.blue('请回答以下问题来配置你的插件:\n'))
@@ -54,7 +59,7 @@ async function collectPluginInfo(providedName) {
       type: 'text',
       name: 'name',
       message: '插件名称 (只能包含小写字母、数字、连字符和下划线)',
-      initial: providedName || '',
+      initial: providedName || 'example-plugin',
       validate: (value) => {
         if (!value) return '插件名称不能为空'
         if (!validatePluginName(value)) {
@@ -73,7 +78,7 @@ async function collectPluginInfo(providedName) {
       type: 'text',
       name: 'author',
       message: '作者姓名',
-      initial: 'Your Name'
+      initial: 'YourName'
     },
     {
       type: 'select',
@@ -89,7 +94,7 @@ async function collectPluginInfo(providedName) {
       type: 'text',
       name: 'license',
       message: '许可证',
-      initial: 'GPL-3.0'
+      initial: 'GPL-3.0-only'
     },
     {
       type: 'confirm',
@@ -162,8 +167,12 @@ async function createPlugin(pluginInfo) {
 
     const packageJson = await fs.readJson(packageJsonPath)
 
+    // 格式化author和pluginName
+    const formattedAuthor = formatString(author)
+    const formattedPluginName = formatString(pluginName)
+
     // 应用用户输入的信息
-    packageJson.id = pluginName
+    packageJson.id = `${formattedAuthor}/${formattedPluginName}`
     packageJson.name = pluginName
     packageJson.description = description
     packageJson.author = author

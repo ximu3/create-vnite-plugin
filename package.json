@@ -20,7 +20,7 @@
     "game"
   ],
   "author": "ximu3",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-only",
   "dependencies": {
     "fs-extra": "^11.1.1",
     "chalk": "^4.1.2",

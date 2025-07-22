@@ -1,21 +1,18 @@
 {
   "id": "my-plugin",
   "name": "my-plugin",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A Vnite plugin",
   "author": "Your Name",
   "license": "MIT",
-  "vniteVersion": "^1.0.0",
+  "vniteVersion": "^4.0.0-alpha.1",
   "main": "dist/index.js",
   "icon": "icon.png",
   "keywords": [
     "vnite",
     "plugin"
   ],
-  "category": "utility",
-  "activationEvents": [
-    "*"
-  ],
+  "category": "common",
   "configuration": [],
   "scripts": {
     "build": "tsc",
