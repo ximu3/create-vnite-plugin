@@ -1,0 +1,32 @@
+# 源代码
+src/
+tsconfig.json
+
+# 开发工具
+.vscode/
+.git/
+.gitignore
+
+# 文档
+docs/
+
+# Node modules
+node_modules/
+template/*/node_modules/
+
+# 日志文件
+*.log
+npm-debug.log*
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# IDE 文件
+*.swp
+*.swo
+*~
+
+# 临时文件
+.tmp/
+.temp/

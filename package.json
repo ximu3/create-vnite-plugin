@@ -1,0 +1,40 @@
+{
+  "name": "create-vnite-plugin",
+  "version": "0.1.0",
+  "description": "Create Vnite Plugin scaffolding tool",
+  "main": "index.js",
+  "bin": {
+    "create-vnite-plugin": "index.js"
+  },
+  "files": [
+    "index.js",
+    "template"
+  ],
+  "keywords": [
+    "vnite",
+    "plugin",
+    "create",
+    "scaffold",
+    "template",
+    "visual-novel",
+    "game"
+  ],
+  "author": "ximu3",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "fs-extra": "^11.1.1",
+    "chalk": "^4.1.2",
+    "prompts": "^2.4.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ximu3/create-vnite-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ximu3/create-vnite-plugin/issues"
+  },
+  "homepage": "https://github.com/ximu3/create-vnite-plugin#readme"
+}

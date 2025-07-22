@@ -1,0 +1,34 @@
+{
+  "id": "my-plugin",
+  "name": "my-plugin",
+  "version": "1.0.0",
+  "description": "A Vnite plugin",
+  "author": "Your Name",
+  "license": "MIT",
+  "vniteVersion": "^1.0.0",
+  "main": "dist/index.js",
+  "icon": "icon.png",
+  "keywords": [
+    "vnite",
+    "plugin"
+  ],
+  "category": "utility",
+  "activationEvents": [
+    "*"
+  ],
+  "configuration": [],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "dev": "npm run build:watch",
+    "pack": "npm run build && npx vnite-plugin-sdk pack .",
+    "clean": "rimraf dist",
+    "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "vnite-plugin-sdk": "^0.1.0",
+    "rimraf": "^5.0.0",
+    "typescript": "^5.8.3"
+  }
+}
