@@ -14,6 +14,8 @@ import type {
 
 // 插件激活函数
 async function activate(api: IPluginAPI): Promise<void> {
+  global.vniteAPI = api
+
   const provider: ScraperProvider = {
     id: 'example-scraper',
     name: '示例刮削器',

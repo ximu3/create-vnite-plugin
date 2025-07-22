@@ -168,11 +168,10 @@ async function createPlugin(pluginInfo) {
     const packageJson = await fs.readJson(packageJsonPath)
 
     // 格式化author和pluginName
-    const formattedAuthor = formatString(author)
     const formattedPluginName = formatString(pluginName)
 
     // 应用用户输入的信息
-    packageJson.id = `${formattedAuthor}/${formattedPluginName}`
+    packageJson.id = formattedPluginName
     packageJson.name = pluginName
     packageJson.description = description
     packageJson.author = author
@@ -192,13 +191,11 @@ ${description}
 
 ${author}
 
-## 安装
+## 打包
 
 \`\`\`bash
-# 开发模式
 npm install
 
-# 打包
 npm run pack
 \`\`\`
 

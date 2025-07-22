@@ -8,6 +8,8 @@ import type { IPluginAPI } from 'vnite-plugin-sdk'
 
 // 插件激活函数
 async function activate(api: IPluginAPI): Promise<void> {
+  global.vniteAPI = api
+
   api.eventBus.on('game:added', async (eventData) => {
     const gameName = eventData.name
   })
