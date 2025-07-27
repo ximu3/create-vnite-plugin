@@ -1,6 +1,6 @@
 {
   "name": "create-vnite-plugin",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Create Vnite Plugin scaffolding tool",
   "main": "index.js",
   "bin": {
