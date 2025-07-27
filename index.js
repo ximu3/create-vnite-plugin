@@ -10,7 +10,7 @@ const fs = require('fs-extra')
 const path = require('path')
 const prompts = require('prompts')
 
-// 简单的颜色输出函数
+// Simple color output functions
 const colors = {
   green: (text) => `\x1b[32m${text}\x1b[0m`,
   blue: (text) => `\x1b[34m${text}\x1b[0m`,
@@ -21,16 +21,16 @@ const colors = {
 
 function showHelp() {
   console.log(`
-${colors.bold('🚀 Create Vnite Plugin')}
+${colors.bold('Create Vnite Plugin')}
 
-${colors.blue('用法:')}
+${colors.blue('Usage:')}
   npm create vnite-plugin [plugin-name]
 
-${colors.blue('示例:')}
-  npm create vnite-plugin my-awesome-plugin   # 直接指定名称
-  npm create vnite-plugin                     # 交互式创建
+${colors.blue('Examples:')}
+  npm create vnite-plugin my-awesome-plugin   # Specify name directly
+  npm create vnite-plugin                     # Create interactively
 
-${colors.blue('更多信息:')}
+${colors.blue('More information:')}
   GitHub: https://github.com/ximu3/create-vnite-plugin
   `)
 }
@@ -40,30 +40,31 @@ function validatePluginName(name) {
     return false
   }
 
-  // 检查插件名称格式
+  // Check plugin name format
   const validName = /^[a-z0-9-_]+$/
   return validName.test(name)
 }
 
-// 将字符串转换为小写并将空格替换为连字符
+// Convert string to lowercase and replace spaces with hyphens
 function formatString(str) {
   return str.toLowerCase().replace(/\s+/g, '-')
 }
 
 async function collectPluginInfo(providedName) {
-  console.log(colors.bold('\n🎯 让我们创建你的 Vnite 插件!'))
-  console.log(colors.blue('请回答以下问题来配置你的插件:\n'))
+  console.log(colors.bold("\nLet's create your Vnite plugin!"))
+  console.log(colors.blue('Please answer the following questions to configure your plugin:\n'))
 
   const questions = [
     {
       type: 'text',
       name: 'name',
-      message: '插件名称 (只能包含小写字母、数字、连字符和下划线)',
+      message:
+        'Plugin name (can only contain lowercase letters, numbers, hyphens, and underscores)',
       initial: providedName || 'example-plugin',
       validate: (value) => {
-        if (!value) return '插件名称不能为空'
+        if (!value) return 'Plugin name cannot be empty'
         if (!validatePluginName(value)) {
-          return '插件名称只能包含小写字母、数字、连字符和下划线'
+          return 'Plugin name can only contain lowercase letters, numbers, hyphens, and underscores'
         }
         return true
       }
@@ -71,35 +72,35 @@ async function collectPluginInfo(providedName) {
     {
       type: 'text',
       name: 'description',
-      message: '插件描述',
+      message: 'Plugin description',
       initial: (prev) => `A Vnite plugin: ${prev}`
     },
     {
       type: 'text',
       name: 'author',
-      message: '作者姓名',
+      message: 'Author name',
       initial: 'YourName'
     },
     {
       type: 'select',
       name: 'category',
-      message: '插件类别',
+      message: 'Plugin category',
       choices: [
-        { title: 'Common (通用)', value: 'common' },
-        { title: 'Scraper (刮削器)', value: 'scraper' }
+        { title: 'Common', value: 'common' },
+        { title: 'Scraper', value: 'scraper' }
       ],
       initial: 0
     },
     {
       type: 'text',
       name: 'license',
-      message: '许可证',
+      message: 'License',
       initial: 'GPL-3.0-only'
     },
     {
       type: 'confirm',
       name: 'confirm',
-      message: '确认创建插件?',
+      message: 'Confirm plugin creation?',
       initial: true
     }
   ]
@@ -107,22 +108,22 @@ async function collectPluginInfo(providedName) {
   try {
     const response = await prompts(questions, {
       onCancel: () => {
-        console.log(colors.yellow('\n❌ 已取消创建插件'))
+        console.log(colors.yellow('\nPlugin creation cancelled'))
         process.exit(0)
       }
     })
 
     if (!response.confirm) {
-      console.log(colors.yellow('\n❌ 已取消创建插件'))
+      console.log(colors.yellow('\nPlugin creation cancelled'))
       process.exit(0)
     }
 
-    // 自动生成关键词而不是让用户输入
+    // Automatically generate keywords instead of asking the user
     response.keywords = ['vnite-plugin', response.category, response.name]
 
     return response
   } catch (error) {
-    console.error(colors.red('❌ 输入错误:'), error.message)
+    console.error(colors.red('Input error:'), error.message)
     process.exit(1)
   }
 }
@@ -132,45 +133,49 @@ async function createPlugin(pluginInfo) {
   const targetDir = path.resolve(process.cwd(), pluginName)
   const templateDir = path.join(__dirname, `template/${category}`)
 
-  // 检查目录是否已存在
+  // Check if directory already exists
   if (await fs.pathExists(targetDir)) {
-    console.error(colors.red(`❌ 错误: 目录 "${pluginName}" 已存在`))
+    console.error(colors.red(`Error: Directory "${pluginName}" already exists`))
     process.exit(1)
   }
 
-  // 检查模板目录是否存在
+  // Check if template directory exists
   if (!(await fs.pathExists(templateDir))) {
-    console.error(colors.red(`❌ 错误: 模板目录 "${category}" 不存在`))
+    console.error(colors.red(`Error: Template directory "${category}" does not exist`))
     console.error(
-      colors.yellow(`请确认在 ${path.dirname(templateDir)} 中存在 ${category} 模板目录`)
+      colors.yellow(
+        `Please confirm that the ${category} template directory exists in ${path.dirname(
+          templateDir
+        )}`
+      )
     )
     process.exit(1)
   }
 
-  console.log(colors.blue(`\n🏗️  创建插件: ${colors.bold(pluginName)}`))
-  console.log(colors.blue(`📍 目标目录: ${targetDir}`))
+  console.log(colors.blue(`\nCreating plugin: ${colors.bold(pluginName)}`))
+  console.log(colors.blue(`Target directory: ${targetDir}`))
 
   try {
-    // 创建目标目录
+    // Create target directory
     await fs.ensureDir(targetDir)
 
-    // 复制模板文件
+    // Copy template files
     await fs.copy(templateDir, targetDir)
 
-    // 更新 package.json
+    // Update package.json
     const packageJsonPath = path.join(targetDir, 'package.json')
 
-    // 确认 package.json 存在
+    // Confirm package.json exists
     if (!(await fs.pathExists(packageJsonPath))) {
-      throw new Error(`模板目录中缺少 package.json 文件`)
+      throw new Error(`package.json file is missing from template directory`)
     }
 
     const packageJson = await fs.readJson(packageJsonPath)
 
-    // 格式化author和pluginName
+    // Format author and pluginName
     const formattedPluginName = formatString(pluginName)
 
-    // 应用用户输入的信息
+    // Apply user input information
     packageJson.id = formattedPluginName
     packageJson.name = pluginName
     packageJson.description = description
@@ -181,17 +186,17 @@ async function createPlugin(pluginInfo) {
 
     await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 })
 
-    // 创建自定义的 README
+    // Create custom README
     const readmePath = path.join(targetDir, 'README.md')
     const readmeContent = `# ${pluginName}
 
 ${description}
 
-## 开发者
+## Developer
 
 ${author}
 
-## 打包
+## Packaging
 
 \`\`\`bash
 npm install
@@ -199,35 +204,35 @@ npm install
 npm run pack
 \`\`\`
 
-## 许可证
+## License
 
 ${license}
 `
 
     await fs.writeFile(readmePath, readmeContent)
 
-    console.log(colors.green('\n✅ 插件创建成功!'))
+    console.log(colors.green('\nPlugin created successfully!'))
 
-    // 显示创建的插件信息
-    console.log(colors.blue('\n📋 插件信息:'))
-    console.log(colors.yellow(`  名称: ${pluginName}`))
-    console.log(colors.yellow(`  描述: ${description}`))
-    console.log(colors.yellow(`  作者: ${author}`))
-    console.log(colors.yellow(`  类别: ${category}`))
-    console.log(colors.yellow(`  关键词: ${keywords.join(', ')}`))
-    console.log(colors.yellow(`  许可证: ${license}`))
+    // Display created plugin information
+    console.log(colors.blue('\nPlugin information:'))
+    console.log(colors.yellow(`  Name: ${pluginName}`))
+    console.log(colors.yellow(`  Description: ${description}`))
+    console.log(colors.yellow(`  Author: ${author}`))
+    console.log(colors.yellow(`  Category: ${category}`))
+    console.log(colors.yellow(`  Keywords: ${keywords.join(', ')}`))
+    console.log(colors.yellow(`  License: ${license}`))
 
-    console.log(colors.blue('\n📦 接下来的步骤:'))
+    console.log(colors.blue('\nNext steps:'))
     console.log(colors.yellow(`  cd ${pluginName}`))
     console.log(colors.yellow('  npm install'))
 
-    console.log(colors.blue('\n🔗 有用的命令:'))
-    console.log(colors.yellow('  npm run pack      # 打包为 .vnpkg 文件'))
+    console.log(colors.blue('\nUseful commands:'))
+    console.log(colors.yellow('  npm run pack      # Package as .vnpkg file'))
 
-    console.log(colors.green('\n🎉 开始开发你的 Vnite 插件吧!'))
+    console.log(colors.green('\nStart developing your Vnite plugin!'))
   } catch (error) {
-    console.error(colors.red('❌ 创建插件时出错:'), error.message)
-    // 清理已创建的目录
+    console.error(colors.red('Error creating plugin:'), error.message)
+    // Clean up created directory
     if (await fs.pathExists(targetDir)) {
       await fs.remove(targetDir)
     }
@@ -238,45 +243,51 @@ ${license}
 async function main() {
   const args = process.argv.slice(2)
 
-  // 显示帮助信息
+  // Show help information
   if (args.includes('--help') || args.includes('-h')) {
     showHelp()
     return
   }
 
-  // 显示版本信息
+  // Show version information
   if (args.includes('--version') || args.includes('-v')) {
     const packageJson = require(path.join(__dirname, 'package.json'))
     console.log(`create-vnite-plugin v${packageJson.version || '1.0.0'}`)
     return
   }
 
-  // 获取可能提供的插件名称
+  // Get possible provided plugin name
   const providedName = args[0] && !args[0].startsWith('-') ? args[0] : null
 
-  // 如果提供了名称但格式不正确，显示错误
+  // If name is provided but format is incorrect, show error
   if (providedName && !validatePluginName(providedName)) {
-    console.error(colors.red('❌ 错误: 插件名称只能包含小写字母、数字、连字符和下划线'))
-    console.log(colors.blue('💡 提示: 你可以不提供名称，我们将引导你交互式创建'))
+    console.error(
+      colors.red(
+        'Error: Plugin name can only contain lowercase letters, numbers, hyphens, and underscores'
+      )
+    )
+    console.log(
+      colors.blue("Tip: You can omit the name, and we'll guide you through interactive creation")
+    )
     process.exit(1)
   }
 
-  // 收集插件信息（交互式或使用提供的名称）
+  // Collect plugin information (interactive or using provided name)
   const pluginInfo = await collectPluginInfo(providedName)
 
-  // 创建插件
+  // Create plugin
   await createPlugin(pluginInfo)
 }
 
-// 只有直接运行时才执行main
+// Only execute main when run directly
 if (require.main === module) {
   main().catch((error) => {
-    console.error(colors.red('❌ 意外错误:'), error.message)
+    console.error(colors.red('Unexpected error:'), error.message)
     process.exit(1)
   })
 }
 
-// 导出函数供测试使用
+// Export functions for testing
 module.exports = {
   collectPluginInfo,
   createPlugin,

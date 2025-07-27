@@ -1,12 +1,12 @@
 import type { IPluginAPI } from 'vnite-plugin-sdk'
 
 /**
- * 通用示例插件
+ * Common example plugin
  *
- * 可通过事件系统来实现插件功能
+ * Can implement plugin functionality through the event system
  */
 
-// 插件激活函数
+// Plugin activation function
 async function activate(api: IPluginAPI): Promise<void> {
   global.vniteAPI = api
 
@@ -15,10 +15,10 @@ async function activate(api: IPluginAPI): Promise<void> {
   })
 }
 
-// 插件停用函数
+// Plugin deactivation function
 async function deactivate(api: IPluginAPI): Promise<void> {}
 
-// 导出插件
+// Export plugin
 export default {
   activate,
   deactivate
