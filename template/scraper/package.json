@@ -5,7 +5,7 @@
   "description": "A Vnite plugin",
   "author": "Your Name",
   "license": "GPL-3.0-only",
-  "vniteVersion": "^4.0.0-alpha.1",
+  "vniteVersion": "^4.0.0-beta.2",
   "main": "dist/index.js",
   "icon": "icon.png",
   "keywords": [
@@ -30,7 +30,7 @@
     "terser-webpack-plugin": "^5.3.14",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3",
-    "vnite-plugin-sdk": "^0.2.1",
+    "vnite-plugin-sdk": "^0.2.2",
     "webpack": "^5.100.2",
     "webpack-cli": "^6.0.1"
   }
